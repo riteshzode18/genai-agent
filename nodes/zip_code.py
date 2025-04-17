@@ -13,14 +13,14 @@ def zip_code(state: CodeGenState) -> CodeGenState:
     # Create a temporary directory to hold the code file
     with tempfile.TemporaryDirectory() as tmpdirname:
         # Write the generated code into a Python file
-        code_file_path = os.path.join(tmpdirname, "generated_code.py")
+        code_file_path = os.path.join(tmpdirname, "generated_code.txt")
         with open(code_file_path, "w") as f:
             f.write(state.generate_code or "# No code generated")
 
         # Now create a zip file
         zip_file_path = os.path.join(output_dir, "generated_code_bundle.zip")
         with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            zipf.write(code_file_path, arcname="generated_code.py")
+            zipf.write(code_file_path, arcname="generated_code.txt")
 
     print(f"✅ Zip file saved at: {zip_file_path}")
 

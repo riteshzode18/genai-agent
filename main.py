@@ -1,17 +1,21 @@
+import json
+import os
 from state.state import CodeGenState
 from utils.llm import llm
-
-
-# response = llm.invoke("Hey GroqAI, Good Morning!")
-# print(response.content)
-
 from langgraph.graph import END, StateGraph
-from state.state import CodeGenState
 from nodes.read_srd import read_srd
 from nodes.generate_code import generate_code
 from nodes.review_code import review_code
 from nodes.test_code import test_code
 from nodes.zip_code import zip_code
+from datetime import datetime
+
+# Create the logs & output folder if it doesn't exist
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+if not os.path.exists("output"):
+    os.makedirs("output")
+
 
 # Create the StateGraph
 workflow = StateGraph(CodeGenState)
@@ -38,8 +42,18 @@ print("✅ Workflow compilation completed successfully.")
 
 # RUN the workflow
 initial_state = CodeGenState()  # <-- Empty state
-
 final_state = app.invoke(initial_state)
 
 print("✅ Workflow execution completed.")
 print(f"🔍 Final State:\n{final_state}")
+
+# Prepare the log data (convert the state to JSON format for readability)
+final_state_dict = final_state.__dict__  # Convert the final state to a dictionary
+timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+log_filename = f"logs/final_state_{timestamp}.json"
+
+# Log the final state to a JSON file in the 'logs' folder
+with open(log_filename, "w") as log_file:
+    json.dump(final_state_dict, log_file, indent=4)
+
+print(f"📜 Final state has been logged to {log_filename}")
