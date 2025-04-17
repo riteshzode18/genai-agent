@@ -1,0 +1,6 @@
+langgraph
+langchain
+pydentic
+python-dotenv
+faiss-cpu
+tqdm
