@@ -14,7 +14,7 @@ def zip_code(state: CodeGenState) -> CodeGenState:
     with tempfile.TemporaryDirectory() as tmpdirname:
         # Write the generated code into a Python file
         code_file_path = os.path.join(tmpdirname, "generated_code.txt")
-        with open(code_file_path, "w") as f:
+        with open(code_file_path, "w", encoding="utf-8") as f:
             f.write(state.generate_code or "# No code generated")
 
         # Now create a zip file
