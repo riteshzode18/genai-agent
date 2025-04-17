@@ -1,47 +1,47 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
-import os
 import shutil
+import os
+from main import run_workflow
 
-# Initialize FastAPI app
 app = FastAPI(
-    title="SRD Upload API",
-    description="Upload Software Requirements Document (SRD) to the server.",
+    title="LangGraph SRD Processor",
+    description="Upload SRD .docx file → Generates project using LangGraph",
     version="1.0.0"
 )
 
-# Create upload folder if it doesn't exist
-UPLOAD_FOLDER = "upload"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Ensure upload directory exists
+os.makedirs("upload", exist_ok=True)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World 🌟"}
+
 
 @app.post("/upload/")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_srd(file: UploadFile = File(...)):
     try:
-        file_location = os.path.join(UPLOAD_FOLDER, file.filename)
-
+        # Save uploaded file into 'upload' folder
+        file_location = os.path.join("upload", file.filename)
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        return JSONResponse(content={
-            "message": "✅ File uploaded successfully!",
-            "filename": file.filename
-        }, status_code=200)
+        # Run the LangGraph workflow
+        result = run_workflow(uploaded_filename=file.filename)
+
+        return JSONResponse(
+            content={
+                "message": "✅ File uploaded and workflow executed successfully.",
+                "final_state_summary": result["final_state"],
+                "generated_zip_file": result["generated_zip"],
+                "log_file_path": result["log_file"]
+            },
+            status_code=200
+        )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"❌ File upload failed. Error: {str(e)}")
-
-@app.get("/")
-def hello_world():
-    return {"message": "hello world"}
-
-# uvicorn server:app --reload
-
-
-
-
-
-
-
-
-
-
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )
