@@ -31,8 +31,15 @@ workflow.add_edge("ReviewCode", "TestCode")
 workflow.add_edge("TestCode", "ZipCode")
 workflow.add_edge("ZipCode", END)
 
-# Compile the workflow
+# After compiling
 app = workflow.compile()
 
-print("Workflow compilation completed successfully.")
+print("✅ Workflow compilation completed successfully.")
 
+# RUN the workflow
+initial_state = CodeGenState()  # <-- Empty state
+
+final_state = app.invoke(initial_state)
+
+print("✅ Workflow execution completed.")
+print(f"🔍 Final State:\n{final_state}")
