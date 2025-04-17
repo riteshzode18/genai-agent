@@ -6,3 +6,6 @@ faiss-cpu
 tqdm
 langchain_groq
 python-docx
+fastapi
+uvicorn
+python-multipart
