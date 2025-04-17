@@ -1,0 +1,8 @@
+langgraph
+langchain
+pydentic
+python-dotenv
+faiss-cpu
+tqdm
+langchain_groq
+python-docx
