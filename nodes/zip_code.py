@@ -1,27 +1,28 @@
+# zip_code.py
+
 import os
-import tempfile
 import zipfile
 from state.state import CodeGenState
+import tempfile
 
 def zip_code(state: CodeGenState) -> CodeGenState:
-    # Create a temporary directory
-    with tempfile.TemporaryDirectory() as temp_dir:
-        # Path to save the code file temporarily
-        code_file_path = os.path.join(temp_dir, "main.py")
+    # Make sure the output directory exists
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
 
-        # Write the generated code to a temporary file
+    # Create a temporary directory to hold the code file
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        # Write the generated code into a Python file
+        code_file_path = os.path.join(tmpdirname, "generated_code.py")
         with open(code_file_path, "w") as f:
-            f.write(state.generate_code or "# No code generated.")
+            f.write(state.generate_code or "# No code generated")
 
-        # Make sure 'output' folder exists
-        os.makedirs("output", exist_ok=True)
+        # Now create a zip file
+        zip_file_path = os.path.join(output_dir, "generated_code_bundle.zip")
+        with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            zipf.write(code_file_path, arcname="generated_code.py")
 
-        # Define final zip path inside the 'output' folder
-        final_zip_path = os.path.join("output", "code_archive.zip")
+    print(f"✅ Zip file saved at: {zip_file_path}")
 
-        # Create the ZIP file inside 'output'
-        with zipfile.ZipFile(final_zip_path, "w") as zipf:
-            zipf.write(code_file_path, arcname="main.py")
-
-    # Update the state with the path to the output zip file
-    return state.model_copy(update={"zip_code": final_zip_path})
+    # You can also update the state if needed (optional)
+    return state.model_copy(update={"zip_code": zip_file_path})
