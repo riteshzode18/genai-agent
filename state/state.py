@@ -6,7 +6,7 @@ from typing import Optional
 class CodeGenState(BaseModel):
     srt_text: Optional[str] = None
     generate_code: Optional[str] = None
-    reviewed_code: Optional[str] = None
+    add_code: Optional[str] = None
     test_code: Optional[str] = None
     zip_code: Optional[str] = None
     structure: Optional[str] = None

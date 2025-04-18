@@ -5,7 +5,7 @@ import os
 def read_srd(state: CodeGenState) -> CodeGenState:
     # Path to your SRD file
     # srd_file_path = "PythonGenai.docx"
-    srd_file_path = os.path.join("upload", "PythonGenAI.docx")
+    srd_file_path = os.path.join("upload", "PythonGenai.docx")
 
     # Check if the file exists
     if not os.path.exists(srd_file_path):
