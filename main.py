@@ -8,7 +8,9 @@ from nodes.generate_code import generate_code
 from nodes.review_code import review_code
 from nodes.test_code import test_code
 from nodes.zip_code import zip_code
+from nodes.structure import project_structure
 from datetime import datetime
+
 
 # Create the logs & output folder if it doesn't exist
 if not os.path.exists("logs"):
@@ -22,6 +24,7 @@ workflow = StateGraph(CodeGenState)
 
 # Add all nodes
 workflow.add_node("ReadSRD", read_srd)
+workflow.add_node("Structure", project_structure)
 workflow.add_node("GenerateCode", generate_code)
 workflow.add_node("ReviewCode", review_code)
 workflow.add_node("TestCode", test_code)
@@ -29,7 +32,8 @@ workflow.add_node("ZipCode", zip_code)
 
 # Define the flow
 workflow.set_entry_point("ReadSRD")
-workflow.add_edge("ReadSRD", "GenerateCode")
+workflow.add_edge("ReadSRD", "Structure")
+workflow.add_edge("Structure", "GenerateCode")
 workflow.add_edge("GenerateCode", "ReviewCode")
 workflow.add_edge("ReviewCode", "TestCode")
 workflow.add_edge("TestCode", "ZipCode")
@@ -40,8 +44,12 @@ app = workflow.compile()
 
 print("✅ Workflow compilation completed successfully.")
 
+
+print(app.get_graph().draw_mermaid())
+
+
 # RUN the workflow
-initial_state = CodeGenState()  # <-- Empty state
+initial_state = CodeGenState()
 final_state = app.invoke(initial_state)
 
 print("✅ Workflow execution completed.")

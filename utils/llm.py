@@ -6,6 +6,7 @@ load_dotenv()
 
 llm = ChatGroq(
     model_name="mistral-saba-24b",
+    # model_name="deepseek-r1-distill-llama-70b",
     temperature=0,
     max_tokens=None,
     timeout=None,

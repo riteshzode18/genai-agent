@@ -9,3 +9,4 @@ class CodeGenState(BaseModel):
     reviewed_code: Optional[str] = None
     test_code: Optional[str] = None
     zip_code: Optional[str] = None
+    structure: Optional[str] = None
