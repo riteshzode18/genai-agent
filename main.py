@@ -5,10 +5,11 @@ from utils.llm import llm
 from langgraph.graph import END, StateGraph
 from nodes.read_srd import read_srd
 from nodes.generate_code import generate_code
-from nodes.review_code import review_code
 from nodes.test_code import test_code
 from nodes.zip_code import zip_code
 from nodes.structure import project_structure
+from nodes.upload_code import upload_code
+# from nodes.clean_code import clean_code
 from datetime import datetime
 
 
@@ -26,18 +27,27 @@ workflow = StateGraph(CodeGenState)
 workflow.add_node("ReadSRD", read_srd)
 workflow.add_node("Structure", project_structure)
 workflow.add_node("GenerateCode", generate_code)
-workflow.add_node("ReviewCode", review_code)
-workflow.add_node("TestCode", test_code)
-workflow.add_node("ZipCode", zip_code)
+# workflow.add_node("CleanCode", clean_code)
+workflow.add_node("Upload_code", upload_code)
+
+# workflow.add_node("ReviewCode", review_code)
+# workflow.add_node("TestCode", test_code)
+# workflow.add_node("ZipCode", zip_code)
 
 # Define the flow
 workflow.set_entry_point("ReadSRD")
 workflow.add_edge("ReadSRD", "Structure")
 workflow.add_edge("Structure", "GenerateCode")
-workflow.add_edge("GenerateCode", "ReviewCode")
-workflow.add_edge("ReviewCode", "TestCode")
-workflow.add_edge("TestCode", "ZipCode")
-workflow.add_edge("ZipCode", END)
+workflow.add_edge("GenerateCode", "Upload_code")
+
+
+
+# workflow.add_edge("ReadSRD", "Structure")
+# workflow.add_edge("Structure", "GenerateCode")
+# workflow.add_edge("GenerateCode", "ReviewCode")
+# workflow.add_edge("ReviewCode", "TestCode")
+# workflow.add_edge("TestCode", "ZipCode")
+# workflow.add_edge("ZipCode", END)
 
 # After compiling
 app = workflow.compile()
@@ -45,23 +55,23 @@ app = workflow.compile()
 print("✅ Workflow compilation completed successfully.")
 
 
-print(app.get_graph().draw_mermaid())
+# print(app.get_graph().draw_mermaid())
 
 
 # RUN the workflow
 initial_state = CodeGenState()
 final_state = app.invoke(initial_state)
 
-print("✅ Workflow execution completed.")
-print(f"🔍 Final State:\n{final_state}")
+# print("✅ Workflow execution completed.")
+# print(f"🔍 Final State:\n{final_state}")
 
-# Prepare the log data (convert the state to JSON format for readability)
-final_state_dict = final_state.__dict__  # Convert the final state to a dictionary
-timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_filename = f"logs/final_state_{timestamp}.json"
+# # Prepare the log data (convert the state to JSON format for readability)
+# final_state_dict = final_state.__dict__  # Convert the final state to a dictionary
+# timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+# log_filename = f"logs/final_state_{timestamp}.json"
 
 # Log the final state to a JSON file in the 'logs' folder
-with open(log_filename, "w") as log_file:
-    json.dump(final_state_dict, log_file, indent=4)
+# with open(log_filename, "w") as log_file:
+#     json.dump(final_state_dict, log_file, indent=4)
 
-print(f"📜 Final state has been logged to {log_filename}")
+# print(f"📜 Final state has been logged to {log_filename}")
