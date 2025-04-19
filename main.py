@@ -31,14 +31,17 @@ workflow.add_node("GenerateCode", generate_code)
 workflow.add_node("Upload_code", upload_code)
 
 # workflow.add_node("ReviewCode", review_code)
-# workflow.add_node("TestCode", test_code)
-# workflow.add_node("ZipCode", zip_code)
+workflow.add_node("TestCode", test_code)
+workflow.add_node("ZipCode", zip_code)
 
 # Define the flow
 workflow.set_entry_point("ReadSRD")
 workflow.add_edge("ReadSRD", "Structure")
 workflow.add_edge("Structure", "GenerateCode")
-workflow.add_edge("GenerateCode", "Upload_code")
+workflow.add_edge("GenerateCode", "TestCode")
+workflow.add_edge("TestCode", "Upload_code")
+workflow.add_edge("Upload_code", "ZipCode")
+
 
 
 
