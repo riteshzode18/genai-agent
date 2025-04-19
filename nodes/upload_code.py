@@ -6,7 +6,7 @@ def upload_code(state: CodeGenState) -> CodeGenState:
     Write the generated code into files, creating any missing folders or files as needed.
     """
 
-    base_dir = "/workspaces/genai-agent/generated_project"
+    base_dir = "generated_project"
     generated_code = state.generate_code  # {file_path: code}
 
     for file_path, code in generated_code.items():
