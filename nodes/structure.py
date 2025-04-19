@@ -82,12 +82,12 @@ def project_structure(state: CodeGenState) -> CodeGenState:
     # Base directory for the project
 
 
-    # Example usage
-    base_dir = "/workspaces/genai-agent/generated_project"
+    # # Example usage
+    # base_dir = "/workspaces/genai-agent/generated_project"
 
-    # Create the folder structure
-    create_structure(base_dir, folder_structure)
-        # Update the state with the generated structure
-    state = state.model_copy(update={"structure": folder_structure})
+    # # Create the folder structure
+    # create_structure(base_dir, folder_structure)
+    #     # Update the state with the generated structure
 
-    return state
+    print("PROJECT STRUCTURE GENERATED")
+    return state.model_copy(update={"structure": folder_structure})

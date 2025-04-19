@@ -9,6 +9,7 @@ from nodes.test_code import test_code
 from nodes.zip_code import zip_code
 from nodes.structure import project_structure
 from nodes.upload_code import upload_code
+# from nodes.clean_code import clean_code
 from datetime import datetime
 
 
@@ -26,7 +27,8 @@ workflow = StateGraph(CodeGenState)
 workflow.add_node("ReadSRD", read_srd)
 workflow.add_node("Structure", project_structure)
 workflow.add_node("GenerateCode", generate_code)
-# workflow.add_node("Upload_code", upload_code)
+# workflow.add_node("CleanCode", clean_code)
+workflow.add_node("Upload_code", upload_code)
 
 # workflow.add_node("ReviewCode", review_code)
 # workflow.add_node("TestCode", test_code)
@@ -36,7 +38,7 @@ workflow.add_node("GenerateCode", generate_code)
 workflow.set_entry_point("ReadSRD")
 workflow.add_edge("ReadSRD", "Structure")
 workflow.add_edge("Structure", "GenerateCode")
-# workflow.add_edge("GenerateCode", "Upload_code")
+workflow.add_edge("GenerateCode", "Upload_code")
 
 
 
